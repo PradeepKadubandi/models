@@ -209,7 +209,7 @@ class Controller:
     self.checkpoint_manager = checkpoint_manager
     self._enable_async_checkpoint_saving = enable_async_checkpointing
     self._checkpoint_options = tf.train.CheckpointOptions(
-        enable_async=enable_async_checkpointing
+        experimental_enable_async_checkpoint=enable_async_checkpointing
     )
 
     if self.trainer is not None:
@@ -561,7 +561,7 @@ class Controller:
   def _sync_on_async_checkpointing(self):
     """Force to wait for the async checkpoint saving (if any) to finish."""
     # pylint: disable=protected-access
-    if self.checkpoint_manager:
+    if self.checkpoint_manager and self._enable_async_checkpoint_saving:
       logging.info("Sync on async checkpoint saving.")
       self.checkpoint_manager.sync()
 
